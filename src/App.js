@@ -104,36 +104,22 @@ export default function App() {
 
 			if (commonProjects.length > 0) {
 				for (let commonProject of commonProjects) {
-					if (!pairs.find(line =>
+					const match = pairs.find(line =>
 						(line.employees[0] === commonProject.EmployeeID1 &&
 							line.employees[1] === commonProject.EmployeeID2
 						) ||
 						(line.employees[0] === commonProject.EmployeeID2 &&
 							line.employees[1] === commonProject.EmployeeID1
 						)
-					)) {
+					)
+
+					if (!match) {
 						pairs.push({
 							employees: [commonProject.EmployeeID1, commonProject.EmployeeID2],
 							projects: [commonProject.ProjectID],
 							daysWorked: [Number(commonProject.DaysWorked)]
 						})
-					} else if (pairs.find(line =>
-						(line.employees[0] === commonProject.EmployeeID1 &&
-							line.employees[1] === commonProject.EmployeeID2
-						) ||
-						(line.employees[0] === commonProject.EmployeeID2 &&
-							line.employees[1] === commonProject.EmployeeID1
-						)
-					)) {
-						const match = pairs.find(line =>
-							(line.employees[0] === commonProject.EmployeeID1 &&
-								line.employees[1] === commonProject.EmployeeID2
-							) ||
-							(line.employees[0] === commonProject.EmployeeID2 &&
-								line.employees[1] === commonProject.EmployeeID1
-							)
-						)
-
+					} else {
 						match.projects.push(commonProject.ProjectID)
 						match.daysWorked.push(Number(commonProject.DaysWorked))
 					}

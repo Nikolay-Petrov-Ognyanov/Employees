@@ -68,7 +68,7 @@ export default function App() {
 						if (employees[a].EmpID !== employees[b].EmpID) {
 							const employeeA = employees[a]
 
-							const ADateFrom = (new Date(employeeA.DateFrom)).getTime()
+							const ADateFrom = new Date(employeeA.DateFrom).getTime()
 
 							const ADateTo = (employeeA.DateTo === "NULL"
 								? new Date().getTime()
@@ -77,7 +77,7 @@ export default function App() {
 
 							const employeeB = employees[b]
 
-							const BDateFrom = (new Date(employeeB.DateFrom)).getTime()
+							const BDateFrom = new Date(employeeB.DateFrom).getTime()
 
 							const BDateTo = (employeeB.DateTo === "NULL"
 								? new Date().getTime()
@@ -132,46 +132,44 @@ export default function App() {
 		}
 	}, [projects])
 
-	return (
-		<div className="App">
-			<h1>Most experienced pair of employees</h1>
+	return (<div className="App">
+		<h1>Most experienced pair of employees</h1>
 
-			<input
-				type="file"
-				accept='.csv'
-				onChange={handleFileUpload}
-				ref={fileInputRef}
-				className="fileInput"
-				id="fileInput"
-			/>
+		<input
+			type="file"
+			accept='.csv'
+			onChange={handleFileUpload}
+			ref={fileInputRef}
+			className="fileInput"
+			id="fileInput"
+		/>
 
-			<label htmlFor="fileInput" className='fileLabel'>Browse...</label>
+		<label htmlFor="fileInput" className='fileLabel'>Browse...</label>
 
-			<p className="fileName">{selectedFile && selectedFile.name}</p>
+		<p className="fileName">{selectedFile && selectedFile.name}</p>
 
-			{mostExperiencedPair && <table>
-				<thead>
-					<tr>
-						<th>Employee ID #1</th>
-						<th>Employee ID #2</th>
-						<th>Project ID</th>
-						<th>Days worked</th>
-					</tr>
-				</thead>
+		{mostExperiencedPair && <table>
+			<thead>
+				<tr>
+					<th>Employee ID #1</th>
+					<th>Employee ID #2</th>
+					<th>Project ID</th>
+					<th>Days worked</th>
+				</tr>
+			</thead>
 
-				<tbody>
-					{mostExperiencedPair.projects.map((project, index) => <tr key={index}>
-						<td>{mostExperiencedPair.employees[0]}</td>
-						<td>{mostExperiencedPair.employees[1]}</td>
-						<td>{project}</td>
-						<td>{mostExperiencedPair.daysWorked[index]}</td>
-					</tr>)}
-				</tbody>
-			</table>}
+			<tbody>
+				{mostExperiencedPair.projects.map((project, index) => <tr key={index}>
+					<td>{mostExperiencedPair.employees[0]}</td>
+					<td>{mostExperiencedPair.employees[1]}</td>
+					<td>{project}</td>
+					<td>{mostExperiencedPair.daysWorked[index]}</td>
+				</tr>)}
+			</tbody>
+		</table>}
 
-			{mostExperiencedPair && <p className="summary">
-				{mostExperiencedPair.employees[0]} and {mostExperiencedPair.employees[1]} worked together on {mostExperiencedPair.projects.length} projects for a total of {mostExperiencedPair.daysWorked.reduce((c, d) => c + d)} days.
-			</p>}
-		</div>
-	)
+		{mostExperiencedPair && <p className="summary">
+			{mostExperiencedPair.employees[0]} and {mostExperiencedPair.employees[1]} worked together on {mostExperiencedPair.projects.length} projects for a total of {mostExperiencedPair.daysWorked.reduce((c, d) => c + d)} days.
+		</p>}
+	</div>)
 }

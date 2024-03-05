@@ -1,26 +1,33 @@
+// Importing necessary libraries and styles
 import { useRef, useState, useEffect } from "react"
 import Papa from "papaparse"
 import "./App.css"
 
+// Functional component definition
 export default function App() {
+	// Ref for file input
 	const fileInputRef = useRef(null)
 
+	// State variables for selected file, employees, projects, and most experienced pair
 	const [selectedFile, setSelectedFile] = useState(null)
 	const [employees, setEmployees] = useState([])
 	const [projects, setProjects] = useState([])
 	const [mostExperiencedPair, setMostExperiencedPair] = useState(null)
 
+	// Function to handle file upload
 	function handleFileUpload(event) {
 		const file = event.target.files[0]
 
 		setSelectedFile(file)
 
+		// Parsing CSV file using PapaParse library
 		Papa.parse(file, {
 			header: true,
 			complete: result => setEmployees(result.data)
 		})
 	}
 
+	// useEffect hook to update projects when employees change
 	useEffect(() => {
 		if (employees.length > 0) {
 			const updatedProjects = []
@@ -55,6 +62,7 @@ export default function App() {
 		}
 	}, [employees])
 
+	// useEffect hook to find the most experienced pair
 	useEffect(() => {
 		if (projects.length > 0) {
 			const commonProjects = []
@@ -126,50 +134,59 @@ export default function App() {
 				}
 			}
 
+			// Setting the most experienced pair based on total days worked
 			setMostExperiencedPair(pairs.sort(
 				(a, b) => b.daysWorked.reduce((c, d) => c + d) - a.daysWorked.reduce((c, d) => c + d)
 			)[0])
 		}
 	}, [projects])
 
-	return (<div className="App">
-		<h1>Most experienced pair of employees</h1>
+	// JSX rendering
+	return (
+		<div className="App">
+			<h1>Most experienced pair of employees</h1>
 
-		<input
-			type="file"
-			accept='.csv'
-			onChange={handleFileUpload}
-			ref={fileInputRef}
-			className="fileInput"
-			id="fileInput"
-		/>
+			{/* File input for uploading CSV */}
+			<input
+				type="file"
+				accept='.csv'
+				onChange={handleFileUpload}
+				ref={fileInputRef}
+				className="fileInput"
+				id="fileInput"
+			/>
 
-		<label htmlFor="fileInput" className='fileLabel'>Browse...</label>
+			{/* Browse button */}
+			<label htmlFor="fileInput" className='fileLabel'>Browse...</label>
 
-		<p className="fileName">{selectedFile && selectedFile.name}</p>
+			{/* Displaying selected file name */}
+			<p className="fileName">{selectedFile && selectedFile.name}</p>
 
-		{mostExperiencedPair && <table>
-			<thead>
-				<tr>
-					<th>Employee ID #1</th>
-					<th>Employee ID #2</th>
-					<th>Project ID</th>
-					<th>Days worked</th>
-				</tr>
-			</thead>
+			{/* Table displaying most experienced pair */}
+			{mostExperiencedPair && <table>
+				<thead>
+					<tr>
+						<th>Employee ID #1</th>
+						<th>Employee ID #2</th>
+						<th>Project ID</th>
+						<th>Days worked</th>
+					</tr>
+				</thead>
 
-			<tbody>
-				{mostExperiencedPair.projects.map((project, index) => <tr key={index}>
-					<td>{mostExperiencedPair.employees[0]}</td>
-					<td>{mostExperiencedPair.employees[1]}</td>
-					<td>{project}</td>
-					<td>{mostExperiencedPair.daysWorked[index]}</td>
-				</tr>)}
-			</tbody>
-		</table>}
+				<tbody>
+					{mostExperiencedPair.projects.map((project, index) => <tr key={index}>
+						<td>{mostExperiencedPair.employees[0]}</td>
+						<td>{mostExperiencedPair.employees[1]}</td>
+						<td>{project}</td>
+						<td>{mostExperiencedPair.daysWorked[index]}</td>
+					</tr>)}
+				</tbody>
+			</table>}
 
-		{mostExperiencedPair && <p className="summary">
-			{mostExperiencedPair.employees[0]} and {mostExperiencedPair.employees[1]} worked together on {mostExperiencedPair.projects.length} projects for a total of {mostExperiencedPair.daysWorked.reduce((c, d) => c + d)} days.
-		</p>}
-	</div>)
+			{/* Summary of most experienced pair */}
+			{mostExperiencedPair && <p className="summary">
+				{mostExperiencedPair.employees[0]} and {mostExperiencedPair.employees[1]} worked together on {mostExperiencedPair.projects.length} projects for a total of {mostExperiencedPair.daysWorked.reduce((c, d) => c + d)} days.
+			</p>}
+		</div>
+	)
 }
